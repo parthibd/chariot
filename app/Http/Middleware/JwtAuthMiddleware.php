@@ -23,15 +23,16 @@ class JwtAuthMiddleware
         if ($request->bearerToken() == null)
             return response()->json(["success" => false, "status" => "error", "message" => "Token missing in header!"]);
         $signer = new Sha256();
-        $token = (new Parser())->parse((string)$request->bearerToken()); // Parses from a string
+        $token = (new Parser())->parse((string)$request->bearerToken());
 
         $extra = [];
 
         if ($token->verify($signer, Config::get("jwt.secret")))
             return $next($request->merge([
                 Constants::CURRENT_USER_ID_KEY => $token->getClaim("user_id"),
-                Constants::CURRENT_USER_ROLE_KEY => $token->getClaim("role_name"),
                 Constants::CURRENT_USERNAME_KEY => $token->getClaim("username"),
+                Constants::CURRENT_USER_ROLE_KEY => $token->getClaim("user_role_name"),
+                Constants::CURRENT_USER_ROLE_ID_KEY => $token->getClaim("user_role_id")
             ]));
         else
             return response()->json([["success" => false, "status" => "error", "message" => "Invalid token!"]]);
