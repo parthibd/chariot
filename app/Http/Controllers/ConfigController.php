@@ -13,17 +13,18 @@ class ConfigController extends Controller
 {
     public function getConfig()
     {
-        $wireguardServerPublicIp = Config::get('wireguard.WIREGUARD_PUBLIC_IP');
+        $wireGuardServerPublicIp = Config::get('wireguard.WIREGUARD_PUBLIC_IP');
         $listenPort = Config::get('wireguard.WIREGUARD_LISTEN_PORT');
+        $keyPair = WireGuardWrapper::getInstance()->generateKeyPair();
         $config = <<<EOD
 [Interface]
-PrivateKey = $privateKey
+PrivateKey = $keyPair[1]
 Address = 192.168.66.2/32
 DNS = 8.8.8.8
 
 [Peer]
-PublicKey =
-Endpoint = $wireguardServerPublicIp:$listenPort
+PublicKey = $keyPair[0]
+Endpoint = $wireGuardServerPublicIp:$listenPort
 AllowedIPs = 0.0.0.0/0
 PersistentKeepalive = 25
 EOD;

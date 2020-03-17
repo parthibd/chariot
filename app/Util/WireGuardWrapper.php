@@ -16,7 +16,7 @@ class WireGuardWrapper
 
     private function __construct()
     {
-        $this->ssh = new SSH2('192.168.43.9');
+        $this->ssh = new SSH2('192.168.2.5');
         $this->ssh->login("parthib", "parthib");
     }
 

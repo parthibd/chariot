@@ -15,9 +15,14 @@
 </template>
 
 <script>
+    import axios from "axios";
+
     export default {
         mounted() {
-            console.log('Component mounted.')
+            console.log('Component mounted.');
+            axios.get("http://google.com").then(response => {
+                console.log(response.data)
+            })
         }
     }
 </script>
