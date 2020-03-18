@@ -27,7 +27,7 @@ class JwtAuthMiddleware
 
         $extra = [];
 
-        if ($token->verify($signer, Config::get("jwt.secret")))
+        if ($token->verify($signer, config("jwt.secret")))
             return $next($request->merge([
                 Constants::CURRENT_USER_ID_KEY => $token->getClaim("user_id"),
                 Constants::CURRENT_USERNAME_KEY => $token->getClaim("username"),
