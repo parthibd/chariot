@@ -57,7 +57,6 @@
                 this.$router.push({name: "login"});
             },
         },
-
     }
 </script>
 <style>

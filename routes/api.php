@@ -23,3 +23,4 @@ Route::get("/ip", "ConfigController@getNextIp");
 Route::get("/connect", "ConfigController@sshConnect");
 
 Route::post("/login", "LoginController@login");
+Route::put("/client", "ClientController@addClient");
