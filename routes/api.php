@@ -12,16 +12,11 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-
-Route::get("/config", "ConfigController@getConfig");
-Route::get("/ip", "ConfigController@getNextIp");
-Route::get("/connect", "ConfigController@sshConnect");
-
 Route::post("/login", "LoginController@login");
-Route::put("/client", "ClientController@addClient");
-Route::delete("/client", "ClientController@removeClient");
+
+Route::group(["middleware" => ["jwt.verify"]], function () {
+    Route::group(["middleware" => ["access.control:admin"]], function () {
+        Route::put("/client", "ClientController@addClient");
+        Route::delete("/client", "ClientController@removeClient");
+    });
+});

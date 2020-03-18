@@ -2,6 +2,10 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AccessControlMiddleware;
+use App\Http\Middleware\CheckApiKeyMiddleware;
+use App\Http\Middleware\FilterDataByRoleMiddleware;
+use App\Http\Middleware\JwtAuthMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -60,6 +64,8 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        "jwt.verify" => JwtAuthMiddleware::class,
+        "access.control" => AccessControlMiddleware::class,
     ];
 
     /**

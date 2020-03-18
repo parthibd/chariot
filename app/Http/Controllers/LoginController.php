@@ -27,7 +27,7 @@ class LoginController extends Controller
                 ->set("user_role_name", $user->role->name);
 
             $token = $builder
-                ->sign(new Sha256(), Config::get("jwt.secret"))
+                ->sign(new Sha256(), config("jwt.secret"))
                 ->getToken();
             return response()->json(["success" => true, "status" => "ok", "token" => (string)$token]);
         } else return response()->json(["success" => false, "status" => "error", "message" => "Wrong password"]);
