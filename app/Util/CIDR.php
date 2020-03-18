@@ -249,4 +249,29 @@ class CIDR
         $range[1] = long2ip((ip2long($cidr[0])) + pow(2, (32 - (int)$cidr[1])) - 1);
         return $range;
     }
+
+    public static function getIpsInRange($cidrRange)
+    {
+        $cidr = explode("/", $cidrRange);
+        $networkMask = CIDR::CIDRtoMask($cidr[1]);
+        $arr = [];
+        $maxPossibleHostCount = ip2long("255.255.255.255") - ip2long($networkMask);
+        for ($i = 0; $i <= $maxPossibleHostCount; $i++) {
+            $arr[] = long2ip((ip2long($cidr[0]) & ip2long($networkMask)) | ip2long(long2ip($i)));
+        }
+        var_dump($arr);
+    }
+
+    public static function getNextAvailableIp($ip, $cidrRange)
+    {
+        $cidr = explode("/", $cidrRange);
+        $networkMask = CIDR::CIDRtoMask($cidr[1]);
+        $maxPossibleHostCount = ip2long("255.255.255.255") - ip2long($networkMask);
+        $currentIp = $ip;
+        $nextIp = long2ip((
+                ip2long($currentIp) & ip2long($networkMask)) |
+            ((ip2long($currentIp) & ip2long(long2ip($maxPossibleHostCount))) + 1));
+        $isValidIp = CIDR::IPisWithinCIDR($nextIp, $cidrRange);
+        return $isValidIp ? $nextIp : false;
+    }
 }
