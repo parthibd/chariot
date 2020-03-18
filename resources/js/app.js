@@ -4,6 +4,8 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+import {TOKEN_KEY} from "./constants";
+
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -32,6 +34,24 @@ import VueRouter from 'vue-router'
 import store from './store/store'
 
 Vue.use(VueRouter);
+
+router.beforeEach((to, from, next) => {
+    let requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+    if (requiresAuth && localStorage.getItem(TOKEN_KEY) == null) {
+        next({name: "login"});
+        store.commit('SET_LAYOUT', "simple-layout");
+    } else if (to.name == "login" && localStorage.getItem(TOKEN_KEY) != null) {
+        next({name: "dashboard"});
+        store.commit('SET_LAYOUT', "app-layout");
+    } else {
+        if (to.name == "login") {
+            store.commit('SET_LAYOUT', "simple-layout");
+        } else {
+            store.commit('SET_LAYOUT', "app-layout");
+        }
+        next()
+    }
+});
 
 const app = new Vue({
     router,

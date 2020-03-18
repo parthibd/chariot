@@ -67,7 +67,6 @@
         },
         created() {
             this.$vuetify.theme.dark = true;
-            this.$store.commit('SET_LAYOUT', "simple-layout");
         },
         methods: {
             login() {

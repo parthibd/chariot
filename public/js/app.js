@@ -2007,7 +2007,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.$vuetify.theme.dark = true;
-    this.$store.commit('SET_LAYOUT', "app-layout");
   }
 });
 
@@ -2090,7 +2089,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.$vuetify.theme.dark = true;
-    this.$store.commit('SET_LAYOUT', "simple-layout");
   },
   methods: {
     login: function login() {
@@ -96375,15 +96373,18 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _plugins_vuetify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./plugins/vuetify */ "./resources/js/plugins/vuetify.js");
-/* harmony import */ var _router_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./router/router */ "./resources/js/router/router.js");
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store/store */ "./resources/js/store/store.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./constants */ "./resources/js/constants.js");
+/* harmony import */ var _plugins_vuetify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./plugins/vuetify */ "./resources/js/plugins/vuetify.js");
+/* harmony import */ var _router_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./router/router */ "./resources/js/router/router.js");
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
+/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./store/store */ "./resources/js/store/store.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+
+
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
@@ -96408,11 +96409,36 @@ Vue.component('app', __webpack_require__(/*! ./App.vue */ "./resources/js/App.vu
 
 
 
-Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
+Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_3__["default"]);
+_router_router__WEBPACK_IMPORTED_MODULE_2__["router"].beforeEach(function (to, from, next) {
+  var requiresAuth = to.matched.some(function (record) {
+    return record.meta.requiresAuth;
+  });
+
+  if (requiresAuth && localStorage.getItem(_constants__WEBPACK_IMPORTED_MODULE_0__["TOKEN_KEY"]) == null) {
+    next({
+      name: "login"
+    });
+    _store_store__WEBPACK_IMPORTED_MODULE_4__["default"].commit('SET_LAYOUT', "simple-layout");
+  } else if (to.name == "login" && localStorage.getItem(_constants__WEBPACK_IMPORTED_MODULE_0__["TOKEN_KEY"]) != null) {
+    next({
+      name: "dashboard"
+    });
+    _store_store__WEBPACK_IMPORTED_MODULE_4__["default"].commit('SET_LAYOUT', "app-layout");
+  } else {
+    if (to.name == "login") {
+      _store_store__WEBPACK_IMPORTED_MODULE_4__["default"].commit('SET_LAYOUT', "simple-layout");
+    } else {
+      _store_store__WEBPACK_IMPORTED_MODULE_4__["default"].commit('SET_LAYOUT', "app-layout");
+    }
+
+    next();
+  }
+});
 var app = new Vue({
-  router: _router_router__WEBPACK_IMPORTED_MODULE_1__["router"],
-  store: _store_store__WEBPACK_IMPORTED_MODULE_3__["default"],
-  vuetify: _plugins_vuetify__WEBPACK_IMPORTED_MODULE_0__["default"],
+  router: _router_router__WEBPACK_IMPORTED_MODULE_2__["router"],
+  store: _store_store__WEBPACK_IMPORTED_MODULE_4__["default"],
+  vuetify: _plugins_vuetify__WEBPACK_IMPORTED_MODULE_1__["default"],
   el: '#app'
 });
 
@@ -97033,7 +97059,10 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
   }, {
     path: "/dashboard",
     name: "dashboard",
-    component: _components_Dashboard__WEBPACK_IMPORTED_MODULE_2__["default"]
+    component: _components_Dashboard__WEBPACK_IMPORTED_MODULE_2__["default"],
+    meta: {
+      requiresAuth: true
+    }
   }]
 });
 

@@ -12,7 +12,8 @@ export const router = new VueRouter({
         {
             path: "/dashboard",
             name: "dashboard",
-            component: DashboardComponent
+            component: DashboardComponent,
+            meta: {requiresAuth: true}
         }
     ]
 });
