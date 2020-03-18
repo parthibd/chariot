@@ -29,6 +29,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUsername($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereWgInterfaceIp($value)
  * @mixin \Eloquent
+ * @property-read \App\UserRole $role
  */
 class User extends Authenticatable
 {

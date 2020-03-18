@@ -16,8 +16,8 @@ class WireGuardWrapper
 
     private function __construct()
     {
-        $this->ssh = new SSH2('192.168.2.5');
-        $this->ssh->login("parthib", "parthib");
+        $this->ssh = new SSH2(config('wireguard.WIREGUARD_PUBLIC_IP'));
+        $this->ssh->login(config('wireguard.WIREGUARD_USERNAME'), config('wireguard.WIREGUARD_PASSWORD'));
     }
 
     public static function getInstance()
@@ -38,6 +38,16 @@ class WireGuardWrapper
         $privateKey = $this->executeCommand('wg genkey');
         $publicKey = $this->executeCommand("echo '$privateKey' | wg pubkey");
         return [trim($publicKey), trim($privateKey)];
+    }
+
+    public function addClientToServer($publicKey, $ip)
+    {
+        $this->executeCommand("sudo wg set wg0 peer $publicKey allowed-ips $ip");
+    }
+
+    public function removeClientFromServer($publicKey)
+    {
+        $this->executeCommand("sudo wg set wg0 peer $publicKey remove");
     }
 
     public function showWireGuardStatus()

@@ -17,6 +17,9 @@ class CreateAvailableIpsTable extends Migration
         Schema::create('available_ips', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string("ip");
+            $table->string("endpoint")->nullable();
+            $table->string("public_key")->nullable();
+            $table->boolean("is_assigned")->nullable();
         });
     }
 

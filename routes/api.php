@@ -24,3 +24,4 @@ Route::get("/connect", "ConfigController@sshConnect");
 
 Route::post("/login", "LoginController@login");
 Route::put("/client", "ClientController@addClient");
+Route::delete("/client", "ClientController@removeClient");
