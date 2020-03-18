@@ -6,14 +6,24 @@ use App\User;
 use Config;
 use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Validator;
 use function response;
 
 class LoginController extends Controller
 {
     public function login(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            "username" => "required",
+            "password" => "required",
+        ]);
+
+        if ($validator->fails())
+            return response()->json(["success" => false, "status" => "error", "message" => "Invalid input"]);
+
         $user = User::where("username", $request->input("username"))->first();
         if (!$user)
             return response()->json(["success" => false, "status" => "error", "message" => "No such user found!"]);

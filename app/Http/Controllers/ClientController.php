@@ -6,6 +6,7 @@ use App\AvailableIp;
 use App\Util\WireGuardWrapper;
 use Composer\Config;
 use Illuminate\Http\Request;
+use Validator;
 
 class ClientController extends Controller
 {
@@ -45,6 +46,13 @@ EOD;
 
     public function removeClient(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            "public_key" => "required",
+        ]);
+
+        if ($validator->fails())
+            return response()->json(["success" => false, "status" => "error", "message" => "Invalid input"]);
+
         $publicKey = $request->query("public_key");
         $ip = AvailableIp::where('public_key', $publicKey)->first();
         if ($ip) {
