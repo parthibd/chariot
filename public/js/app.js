@@ -2121,6 +2121,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./resources/js/constants.js");
 //
 //
 //
@@ -2162,6 +2163,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2169,14 +2171,12 @@ __webpack_require__.r(__webpack_exports__);
       userInfo: {}
     };
   },
-  props: {
-    source: String
-  },
-  created: function created() {// this.userInfo = this.$store.getters.getCurrentUser
+  created: function created() {
+    this.userInfo = this.$store.getters.getCurrentUser;
   },
   methods: {
     logout: function logout() {
-      // localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(_constants__WEBPACK_IMPORTED_MODULE_0__["TOKEN_KEY"]);
       this.$router.push({
         name: "login"
       });
@@ -97133,11 +97133,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _AppState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AppState */ "./resources/js/store/AppState.js");
+
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
-  modules: {},
+  modules: {
+    AppState: _AppState__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
   state: {
     layout: 'simple-layout'
   },

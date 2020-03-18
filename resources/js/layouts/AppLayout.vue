@@ -41,20 +41,19 @@
 
 <script>
 
+    import {TOKEN_KEY} from "../constants";
+
     export default {
         data: () => ({
             drawer: false,
             userInfo: {},
         }),
-        props: {
-            source: String
-        },
         created() {
-            // this.userInfo = this.$store.getters.getCurrentUser
+            this.userInfo = this.$store.getters.getCurrentUser
         },
         methods: {
             logout() {
-                // localStorage.removeItem(TOKEN_KEY);
+                localStorage.removeItem(TOKEN_KEY);
                 this.$router.push({name: "login"});
             },
         },

@@ -21,3 +21,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get("/config", "ConfigController@getConfig");
 Route::get("/ip", "ConfigController@getNextIp");
 Route::get("/connect", "ConfigController@sshConnect");
+
+Route::post("/login", "LoginController@login");
