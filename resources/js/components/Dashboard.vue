@@ -11,10 +11,13 @@
                 <v-card>
                     <v-img
                         :src="client.qr_code"
-                        class="white--text align-end">
+                        class="white--text align-end"
+                        contain
+                        height="200px">
                     </v-img>
 
                     <v-card-actions>
+                        {{client.ip}}
                         <v-spacer/>
                         <v-btn @click="deleteClient(client.public_key)" icon>
                             <v-icon>mdi-delete</v-icon>

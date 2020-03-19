@@ -2013,6 +2013,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -38473,12 +38476,17 @@ var render = function() {
                 [
                   _c("v-img", {
                     staticClass: "white--text align-end",
-                    attrs: { src: client.qr_code }
+                    attrs: { src: client.qr_code, contain: "", height: "200px" }
                   }),
                   _vm._v(" "),
                   _c(
                     "v-card-actions",
                     [
+                      _vm._v(
+                        "\n                    " +
+                          _vm._s(client.ip) +
+                          "\n                    "
+                      ),
                       _c("v-spacer"),
                       _vm._v(" "),
                       _c(
