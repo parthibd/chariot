@@ -2016,6 +2016,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2034,20 +2064,11 @@ __webpack_require__.r(__webpack_exports__);
       bottom: true,
       left: false,
       transition: 'slide-y-reverse-transition',
-      cards: [{
-        title: 'Pre-fab homes',
-        src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
-        flex: 3
-      }, {
-        title: 'Favorite road trips',
-        src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg',
-        flex: 3
-      }, {
-        title: 'Best airlines',
-        src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg',
-        flex: 3
-      }],
-      clients: []
+      clients: [],
+      dialogAddUser: false,
+      dialogEditUser: false,
+      name: "",
+      currentEditedClient: null
     };
   },
   created: function created() {
@@ -2058,7 +2079,11 @@ __webpack_require__.r(__webpack_exports__);
     addClient: function addClient() {
       var _this = this;
 
-      Object(_localApiService__WEBPACK_IMPORTED_MODULE_0__["addClient"])().then(function () {
+      this.dialogAddUser = false;
+
+      Object(_localApiService__WEBPACK_IMPORTED_MODULE_0__["addClient"])(this.name).then(function () {
+        _this.name = '';
+
         _this.getAllClients();
       });
     },
@@ -2074,6 +2099,23 @@ __webpack_require__.r(__webpack_exports__);
 
       Object(_localApiService__WEBPACK_IMPORTED_MODULE_0__["deleteClient"])(publicKey).then(function (response) {
         _this3.getAllClients();
+      });
+    },
+    openEditClientDialog: function openEditClientDialog(client) {
+      this.currentEditedClient = client;
+      this.dialogEditUser = true;
+      this.name = client.name;
+    },
+    editClient: function editClient() {
+      var _this4 = this;
+
+      this.dialogEditUser = false;
+
+      Object(_localApiService__WEBPACK_IMPORTED_MODULE_0__["editClient"])(this.currentEditedClient.id, this.name).then(function (response) {
+        _this4.currentEditedClient = null;
+        _this4.name = '';
+
+        _this4.getAllClients();
       });
     }
   }
@@ -38484,10 +38526,24 @@ var render = function() {
                     [
                       _vm._v(
                         "\n                    " +
-                          _vm._s(client.ip) +
+                          _vm._s(client.name) +
                           "\n                    "
                       ),
                       _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { icon: "" },
+                          on: {
+                            click: function($event) {
+                              return _vm.openEditClientDialog(client)
+                            }
+                          }
+                        },
+                        [_c("v-icon", [_vm._v("mdi-pencil")])],
+                        1
+                      ),
                       _vm._v(" "),
                       _c(
                         "v-btn",
@@ -38571,9 +38627,133 @@ var render = function() {
             "v-btn",
             {
               attrs: { fab: "", dark: "", small: "", color: "indigo" },
-              on: { click: _vm.addClient }
+              on: {
+                click: function($event) {
+                  _vm.dialogAddUser = true
+                }
+              }
             },
             [_c("v-icon", [_vm._v("mdi-plus")])],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-dialog",
+        {
+          attrs: { "max-width": "500px" },
+          model: {
+            value: _vm.dialogAddUser,
+            callback: function($$v) {
+              _vm.dialogAddUser = $$v
+            },
+            expression: "dialogAddUser"
+          }
+        },
+        [
+          _c(
+            "v-card",
+            [
+              _c(
+                "v-card-text",
+                [
+                  _c("v-text-field", {
+                    attrs: { label: "Name" },
+                    model: {
+                      value: _vm.name,
+                      callback: function($$v) {
+                        _vm.name = $$v
+                      },
+                      expression: "name"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("small", { staticClass: "grey--text" }, [
+                    _vm._v("Enter friendly name for the client.")
+                  ])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-card-actions",
+                [
+                  _c("v-spacer"),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { text: "", color: "primary" },
+                      on: { click: _vm.addClient }
+                    },
+                    [_vm._v("Submit")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-dialog",
+        {
+          attrs: { "max-width": "500px" },
+          model: {
+            value: _vm.dialogEditUser,
+            callback: function($$v) {
+              _vm.dialogEditUser = $$v
+            },
+            expression: "dialogEditUser"
+          }
+        },
+        [
+          _c(
+            "v-card",
+            [
+              _c(
+                "v-card-text",
+                [
+                  _c("v-text-field", {
+                    attrs: { label: "Name" },
+                    model: {
+                      value: _vm.name,
+                      callback: function($$v) {
+                        _vm.name = $$v
+                      },
+                      expression: "name"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("small", { staticClass: "grey--text" }, [
+                    _vm._v("Enter friendly name for the client.")
+                  ])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-card-actions",
+                [
+                  _c("v-spacer"),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { text: "", color: "primary" },
+                      on: { click: _vm.editClient }
+                    },
+                    [_vm._v("Submit")]
+                  )
+                ],
+                1
+              )
+            ],
             1
           )
         ],
@@ -96922,7 +97102,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************!*\
   !*** ./resources/js/localApiService.js ***!
   \*****************************************/
-/*! exports provided: getUserRoles, addUser, getAllUsers, getUserWithId, editUserWithId, deleteUserWithId, getAllClients, addClient, deleteClient */
+/*! exports provided: getUserRoles, addUser, getAllUsers, getUserWithId, editUserWithId, deleteUserWithId, getAllClients, addClient, deleteClient, editClient */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -96936,6 +97116,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAllClients", function() { return getAllClients; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addClient", function() { return addClient; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteClient", function() { return deleteClient; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editClient", function() { return editClient; });
 /* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./globals */ "./resources/js/globals.js");
 
 function getUserRoles() {
@@ -96982,8 +97163,12 @@ function getAllClients() {
     return response.data;
   });
 }
-function addClient() {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].put("client").then(function (response) {
+function addClient(name) {
+  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].put("client", null, {
+    params: {
+      name: name
+    }
+  }).then(function (response) {
     return response.data;
   });
 }
@@ -96991,6 +97176,15 @@ function deleteClient(publicKey) {
   return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"]["delete"]("client", {
     params: {
       public_key: publicKey
+    }
+  }).then(function (response) {
+    return response.data;
+  });
+}
+function editClient(id, name) {
+  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].patch("client/".concat(id), null, {
+    params: {
+      name: name
     }
   }).then(function (response) {
     return response.data;

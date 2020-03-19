@@ -51,8 +51,12 @@ export function getAllClients() {
     })
 }
 
-export function addClient() {
-    return localApiInstance.put(`client`).then(response => {
+export function addClient(name) {
+    return localApiInstance.put(`client`, null, {
+        params: {
+            name: name
+        }
+    }).then(response => {
         return response.data
     })
 }
@@ -61,6 +65,16 @@ export function deleteClient(publicKey) {
     return localApiInstance.delete(`client`, {
         params: {
             public_key: publicKey
+        }
+    }).then(response => {
+        return response.data
+    })
+}
+
+export function editClient(id, name) {
+    return localApiInstance.patch(`client/${id}`, null, {
+        params: {
+            name: name
         }
     }).then(response => {
         return response.data

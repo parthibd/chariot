@@ -17,8 +17,12 @@
                     </v-img>
 
                     <v-card-actions>
-                        {{client.ip}}
+                        {{client.name}}
                         <v-spacer/>
+                        <v-btn
+                            @click="openEditClientDialog(client)" icon>
+                            <v-icon>mdi-pencil</v-icon>
+                        </v-btn>
                         <v-btn @click="deleteClient(client.public_key)" icon>
                             <v-icon>mdi-delete</v-icon>
                         </v-btn>
@@ -52,16 +56,42 @@
                 dark
                 small
                 color="indigo"
-                @click="addClient"
+                @click="dialogAddUser = true"
             >
                 <v-icon>mdi-plus</v-icon>
             </v-btn>
         </v-speed-dial>
+
+        <v-dialog v-model="dialogAddUser" max-width="500px">
+            <v-card>
+                <v-card-text>
+                    <v-text-field v-model="name" label="Name"/>
+                    <small class="grey--text">Enter friendly name for the client.</small>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer/>
+                    <v-btn text color="primary" @click="addClient">Submit</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="dialogEditUser" max-width="500px">
+            <v-card>
+                <v-card-text>
+                    <v-text-field v-model="name" label="Name"/>
+                    <small class="grey--text">Enter friendly name for the client.</small>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer/>
+                    <v-btn text color="primary" @click="editClient">Submit</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
 <script>
-    import {addClient, deleteClient, getAllClients} from "../localApiService";
+    import {addClient, deleteClient, editClient, getAllClients} from "../localApiService";
 
     export default {
         props: {
@@ -79,12 +109,11 @@
             bottom: true,
             left: false,
             transition: 'slide-y-reverse-transition',
-            cards: [
-                {title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', flex: 3},
-                {title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', flex: 3},
-                {title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 3},
-            ],
-            clients: []
+            clients: [],
+            dialogAddUser: false,
+            dialogEditUser: false,
+            name: "",
+            currentEditedClient: null
         }),
         created() {
             this.$vuetify.theme.dark = true;
@@ -92,7 +121,9 @@
         },
         methods: {
             addClient() {
-                addClient().then(() => {
+                this.dialogAddUser = false;
+                addClient(this.name).then(() => {
+                    this.name = '';
                     this.getAllClients();
                 })
             },
@@ -105,6 +136,19 @@
                 deleteClient(publicKey).then((response => {
                     this.getAllClients()
                 }))
+            },
+            openEditClientDialog(client) {
+                this.currentEditedClient = client;
+                this.dialogEditUser = true;
+                this.name = client.name
+            },
+            editClient() {
+                this.dialogEditUser = false;
+                editClient(this.currentEditedClient.id, this.name).then(response => {
+                    this.currentEditedClient = null;
+                    this.name = '';
+                    this.getAllClients();
+                })
             }
         }
     }

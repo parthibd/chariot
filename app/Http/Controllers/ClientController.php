@@ -11,8 +11,15 @@ use Validator;
 
 class ClientController extends Controller
 {
-    public function addClient()
+    public function addClient(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            "name" => "required",
+        ]);
+
+        if ($validator->fails())
+            return response()->json(["success" => false, "status" => "error", "message" => "Invalid input"]);
+
         $wireGuardServerPublicIp = config('wireguard.WIREGUARD_PUBLIC_IP');
         $wireGuardServerPublicKey = config('wireguard.WIREGUARD_PUBLIC_KEY');
         $listenPort = config('wireguard.WIREGUARD_LISTEN_PORT');
@@ -42,6 +49,7 @@ EOD;
         $ip->endpoint = $ipToAssign;
         $ip->is_assigned = true;
         $ip->config = $config;
+        $ip->name = $request->input("name");
         $ip->save();
 
         return response()->json(["config" => $config, "key_pair" => $keyPair]);
@@ -65,8 +73,29 @@ EOD;
             $ip->endpoint = null;
             $ip->is_assigned = false;
             $ip->config = null;
+            $ip->name = null;
             $ip->save();
             return response()->json(["success" => true, "status" => "ok", "message" => "Client removed from server"]);
+        } else {
+            return response()->json(["success" => false, "status" => "error", "message" => "No such peer exists."]);
+        }
+    }
+
+    public function editClient($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "name" => "required",
+        ]);
+
+        if ($validator->fails())
+            return response()->json(["success" => false, "status" => "error", "message" => "Invalid input"]);
+
+        $name = $request->input("name");
+        $ip = AvailableIp::where('id', $id)->first();
+        if ($ip) {
+            $ip->name = $name;
+            $ip->save();
+            return response()->json(["success" => true, "status" => "ok", "message" => "Client edited!"]);
         } else {
             return response()->json(["success" => false, "status" => "error", "message" => "No such peer exists."]);
         }
