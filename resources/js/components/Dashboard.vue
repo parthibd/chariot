@@ -3,6 +3,11 @@
     <v-container
         fluid>
         <canvas class="background"/>
+        <v-progress-linear
+            v-if="loadingData"
+            indeterminate
+            color="cyan darken-2"
+        />
         <v-row dense style="position: relative">
             <v-col
                 v-for="client in clients"
@@ -116,7 +121,8 @@
             dialogEditUser: false,
             name: "",
             currentEditedClient: null,
-            pjsInstance: null
+            pjsInstance: null,
+            loadingData: true
         }),
         beforeDestroy() {
             this.pjsInstance.destroy()
@@ -158,9 +164,11 @@
             getAllClients() {
                 getAllClients().then(clients => {
                     this.clients = clients;
+                    this.loadingData = false;
                 })
             },
             deleteClient(publicKey) {
+                this.loadingData = true;
                 deleteClient(publicKey).then((response => {
                     this.getAllClients()
                 }))
@@ -171,6 +179,7 @@
                 this.name = client.name
             },
             editClient() {
+                this.loadingData = true;
                 this.dialogEditUser = false;
                 editClient(this.currentEditedClient.id, this.name).then(response => {
                     this.currentEditedClient = null;
