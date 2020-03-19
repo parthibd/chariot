@@ -16,6 +16,17 @@
                     </v-list-item-content>
                 </v-list-item>
 
+                <v-list-item>
+                    <v-list-item-action>
+                        <v-icon>mdi-chart-areaspline</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            <router-link :to="{name:'metrics'}">Metrics</router-link>
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+
                 <v-list-item v-on:click="logout">
                     <v-list-item-action>
                         <v-icon>mdi-power-plug-off</v-icon>
@@ -34,7 +45,9 @@
             <v-toolbar-title>Chariot</v-toolbar-title>
         </v-app-bar>
         <v-content>
-            <router-view></router-view>
+            <keep-alive>
+                <router-view/>
+            </keep-alive>
         </v-content>
     </v-app>
 </template>
