@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Endroid\QrCode\QrCode;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -21,8 +22,18 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\AvailableIp whereEndpoint($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\AvailableIp whereIsAssigned($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\AvailableIp wherePublicKey($value)
+ * @property string|null $config
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\AvailableIp whereConfig($value)
  */
 class AvailableIp extends Model
 {
     public $timestamps = false;
+
+    protected $appends = ["qr_code"];
+
+    public function getQrCodeAttribute()
+    {
+        $qrCode = new QrCode($this->config);
+        return 'data:image/' . $qrCode->getContentType() . ';base64,' . base64_encode($qrCode->writeString());
+    }
 }

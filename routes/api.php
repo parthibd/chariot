@@ -16,6 +16,7 @@ Route::post("/login", "LoginController@login");
 
 Route::group(["middleware" => ["jwt.verify"]], function () {
     Route::group(["middleware" => ["access.control:admin"]], function () {
+        Route::get("/client", "ClientController@getAllClients");
         Route::put("/client", "ClientController@addClient");
         Route::delete("/client", "ClientController@removeClient");
     });

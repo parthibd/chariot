@@ -60,6 +60,7 @@ class RemoveInactivePeers extends Command
                     $ip->public_key = null;
                     $ip->endpoint = null;
                     $ip->is_assigned = false;
+                    $ip->config = null;
                     $ip->save();
                 }
             }

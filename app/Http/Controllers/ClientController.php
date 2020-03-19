@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\AvailableIp;
 use App\Util\WireGuardWrapper;
 use Composer\Config;
+use Endroid\QrCode\QrCode;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -40,7 +41,9 @@ EOD;
         $ip->public_key = $keyPair[0];
         $ip->endpoint = $ipToAssign;
         $ip->is_assigned = true;
+        $ip->config = $config;
         $ip->save();
+
         return response()->json(["config" => $config, "key_pair" => $keyPair]);
     }
 
@@ -54,18 +57,23 @@ EOD;
             return response()->json(["success" => false, "status" => "error", "message" => "Invalid input"]);
 
         $publicKey = $request->query("public_key");
-        $ip = AvailableIp::where('public_key', $publicKey)->first();
+        $ip = AvailableIp::where('public_key', 'LIKE', '%' . $publicKey . '%')->first();
         if ($ip) {
-
             WireGuardWrapper::getInstance()->removeClientFromServer($publicKey);
 
             $ip->public_key = null;
             $ip->endpoint = null;
             $ip->is_assigned = false;
+            $ip->config = null;
             $ip->save();
             return response()->json(["success" => true, "status" => "ok", "message" => "Client removed from server"]);
         } else {
             return response()->json(["success" => false, "status" => "error", "message" => "No such peer exists."]);
         }
+    }
+
+    public function getAllClients()
+    {
+        return response()->json(AvailableIp::where("is_assigned", true)->get());
     }
 }

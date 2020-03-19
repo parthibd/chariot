@@ -1953,6 +1953,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _localApiService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../localApiService */ "./resources/js/localApiService.js");
 //
 //
 //
@@ -1996,17 +1997,82 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     source: String
   },
   data: function data() {
     return {
-      drawer: null
+      drawer: null,
+      direction: 'top',
+      fab: false,
+      fling: false,
+      hover: false,
+      tabs: null,
+      top: false,
+      right: true,
+      bottom: true,
+      left: false,
+      transition: 'slide-y-reverse-transition',
+      cards: [{
+        title: 'Pre-fab homes',
+        src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+        flex: 3
+      }, {
+        title: 'Favorite road trips',
+        src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg',
+        flex: 3
+      }, {
+        title: 'Best airlines',
+        src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg',
+        flex: 3
+      }],
+      clients: []
     };
   },
   created: function created() {
     this.$vuetify.theme.dark = true;
+    this.getAllClients();
+  },
+  methods: {
+    addClient: function addClient() {
+      var _this = this;
+
+      Object(_localApiService__WEBPACK_IMPORTED_MODULE_0__["addClient"])().then(function () {
+        _this.getAllClients();
+      });
+    },
+    getAllClients: function getAllClients() {
+      var _this2 = this;
+
+      Object(_localApiService__WEBPACK_IMPORTED_MODULE_0__["getAllClients"])().then(function (clients) {
+        _this2.clients = clients;
+      });
+    },
+    deleteClient: function deleteClient(publicKey) {
+      var _this3 = this;
+
+      Object(_localApiService__WEBPACK_IMPORTED_MODULE_0__["deleteClient"])(publicKey).then(function (response) {
+        _this3.getAllClients();
+      });
+    }
   }
 });
 
@@ -38392,93 +38458,114 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "v-container",
-    { staticClass: "fill-height", attrs: { fluid: "" } },
+    { attrs: { fluid: "" } },
     [
       _c(
         "v-row",
-        { attrs: { align: "center", justify: "center" } },
-        [
-          _c(
+        { attrs: { dense: "" } },
+        _vm._l(_vm.clients, function(client) {
+          return _c(
             "v-col",
-            { staticClass: "shrink" },
+            { key: client.id, attrs: { cols: "3" } },
             [
               _c(
-                "v-tooltip",
-                {
-                  attrs: { right: "" },
-                  scopedSlots: _vm._u([
-                    {
-                      key: "activator",
-                      fn: function(ref) {
-                        var on = ref.on
-                        return [
-                          _c(
-                            "v-btn",
-                            _vm._g(
-                              {
-                                attrs: {
-                                  href: _vm.source,
-                                  icon: "",
-                                  large: "",
-                                  target: "_blank"
-                                }
-                              },
-                              on
-                            ),
-                            [
-                              _c("v-icon", { attrs: { large: "" } }, [
-                                _vm._v("mdi-code-tags")
-                              ])
-                            ],
-                            1
-                          )
-                        ]
-                      }
-                    }
-                  ])
-                },
-                [_vm._v(" "), _c("span", [_vm._v("Source")])]
-              ),
-              _vm._v(" "),
-              _c(
-                "v-tooltip",
-                {
-                  attrs: { right: "" },
-                  scopedSlots: _vm._u([
-                    {
-                      key: "activator",
-                      fn: function(ref) {
-                        var on = ref.on
-                        return [
-                          _c(
-                            "v-btn",
-                            _vm._g(
-                              {
-                                attrs: {
-                                  icon: "",
-                                  large: "",
-                                  href:
-                                    "https://codepen.io/johnjleider/pen/bXNzZL",
-                                  target: "_blank"
-                                }
-                              },
-                              on
-                            ),
-                            [
-                              _c("v-icon", { attrs: { large: "" } }, [
-                                _vm._v("mdi-codepen")
-                              ])
-                            ],
-                            1
-                          )
-                        ]
-                      }
-                    }
-                  ])
-                },
-                [_vm._v(" "), _c("span", [_vm._v("Codepen")])]
+                "v-card",
+                [
+                  _c("v-img", {
+                    staticClass: "white--text align-end",
+                    attrs: { src: client.qr_code }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { icon: "" },
+                          on: {
+                            click: function($event) {
+                              return _vm.deleteClient(client.public_key)
+                            }
+                          }
+                        },
+                        [_c("v-icon", [_vm._v("mdi-delete")])],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
               )
             ],
+            1
+          )
+        }),
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-speed-dial",
+        {
+          staticStyle: { position: "absolute" },
+          attrs: {
+            top: _vm.top,
+            bottom: _vm.bottom,
+            right: _vm.right,
+            left: _vm.left,
+            direction: _vm.direction,
+            "open-on-hover": _vm.hover,
+            transition: _vm.transition
+          },
+          scopedSlots: _vm._u([
+            {
+              key: "activator",
+              fn: function() {
+                return [
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "blue darken-2", dark: "", fab: "" },
+                      model: {
+                        value: _vm.fab,
+                        callback: function($$v) {
+                          _vm.fab = $$v
+                        },
+                        expression: "fab"
+                      }
+                    },
+                    [
+                      _vm.fab
+                        ? _c("v-icon", [_vm._v("mdi-close")])
+                        : _c("v-icon", [_vm._v("mdi-account-circle")])
+                    ],
+                    1
+                  )
+                ]
+              },
+              proxy: true
+            }
+          ]),
+          model: {
+            value: _vm.fab,
+            callback: function($$v) {
+              _vm.fab = $$v
+            },
+            expression: "fab"
+          }
+        },
+        [
+          _vm._v(" "),
+          _c(
+            "v-btn",
+            {
+              attrs: { fab: "", dark: "", small: "", color: "indigo" },
+              on: { click: _vm.addClient }
+            },
+            [_c("v-icon", [_vm._v("mdi-plus")])],
             1
           )
         ],
@@ -96827,7 +96914,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************!*\
   !*** ./resources/js/localApiService.js ***!
   \*****************************************/
-/*! exports provided: getUserRoles, addUser, getAllUsers, getUserWithId, editUserWithId, deleteUserWithId, getAllVehicles, getVehicle, getDepartmentalVehicles, getVehiclesOnHire, getRouteReports, getSummaryReport, getEventReports, getTripReports, getLiveTrack, stopLiveTrack, getDashboardStats, getEventTypes, getUnresolvedComplaints, getAllDivisions, filterComplaints */
+/*! exports provided: getUserRoles, addUser, getAllUsers, getUserWithId, editUserWithId, deleteUserWithId, getAllClients, addClient, deleteClient */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -96838,28 +96925,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUserWithId", function() { return getUserWithId; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editUserWithId", function() { return editUserWithId; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteUserWithId", function() { return deleteUserWithId; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAllVehicles", function() { return getAllVehicles; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getVehicle", function() { return getVehicle; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDepartmentalVehicles", function() { return getDepartmentalVehicles; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getVehiclesOnHire", function() { return getVehiclesOnHire; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRouteReports", function() { return getRouteReports; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSummaryReport", function() { return getSummaryReport; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEventReports", function() { return getEventReports; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTripReports", function() { return getTripReports; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLiveTrack", function() { return getLiveTrack; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "stopLiveTrack", function() { return stopLiveTrack; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDashboardStats", function() { return getDashboardStats; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEventTypes", function() { return getEventTypes; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUnresolvedComplaints", function() { return getUnresolvedComplaints; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAllDivisions", function() { return getAllDivisions; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "filterComplaints", function() { return filterComplaints; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAllClients", function() { return getAllClients; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addClient", function() { return addClient; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteClient", function() { return deleteClient; });
 /* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./globals */ "./resources/js/globals.js");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 
 function getUserRoles() {
   return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("users/roles").then(function (response) {
@@ -96871,8 +96940,7 @@ function addUser(fullName, username, password, roleId, divisionId) {
     full_name: fullName,
     username: username,
     password: password,
-    role_id: roleId,
-    division_id: divisionId
+    role_id: roleId
   }).then(function (response) {
     return response;
   });
@@ -96891,8 +96959,7 @@ function editUserWithId(id, username, password, roleId, divisionId) {
   return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].patch("users/".concat(id), {
     username: username,
     password: password,
-    role_id: roleId,
-    division_id: divisionId
+    role_id: roleId
   }).then(function (response) {
     return response.data;
   });
@@ -96902,107 +96969,20 @@ function deleteUserWithId(id) {
     return response.data;
   });
 }
-function getAllVehicles() {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("vehicles").then(function (response) {
+function getAllClients() {
+  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("client").then(function (response) {
     return response.data;
   });
 }
-function getVehicle(id, cancelToken) {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("vehicles/".concat(id), {
-    cancelToken: cancelToken
-  }).then(function (response) {
+function addClient() {
+  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].put("client").then(function (response) {
     return response.data;
   });
 }
-function getDepartmentalVehicles() {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("vehicles/dv").then(function (response) {
-    return response.data;
-  });
-}
-function getVehiclesOnHire() {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("vehicles/voh").then(function (response) {
-    return response.data;
-  });
-}
-function getRouteReports(params, token) {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("reports/route", {
-    params: _objectSpread({}, params),
-    cancelToken: token
-  }).then(function (response) {
-    return response.data;
-  });
-}
-function getSummaryReport(params) {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("reports/summary", {
-    params: _objectSpread({}, params)
-  }).then(function (response) {
-    return response.data;
-  });
-}
-function getEventReports(params, token) {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("reports/event", {
-    params: _objectSpread({}, params),
-    cancelToken: token
-  }).then(function (response) {
-    return response.data;
-  });
-}
-function getTripReports(params, token) {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("reports/trip", {
-    params: _objectSpread({}, params),
-    cancelToken: token
-  }).then(function (response) {
-    return response.data;
-  });
-}
-function getLiveTrack(deviceId, cancelTokenSource) {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("livetrack", {
-    cancelToken: cancelTokenSource.token,
+function deleteClient(publicKey) {
+  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"]["delete"]("client", {
     params: {
-      deviceId: deviceId
-    }
-  }).then(function (response) {
-    return {
-      response: response,
-      track: response.data
-    };
-  });
-}
-function stopLiveTrack(deviceId) {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"]["delete"]("livetrack", {
-    params: {
-      deviceId: deviceId
-    }
-  }).then(function (response) {
-    return response.data;
-  });
-}
-function getDashboardStats() {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("dashboard/stats").then(function (response) {
-    return response.data;
-  });
-}
-function getEventTypes() {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("events/types").then(function (response) {
-    return response.data;
-  });
-}
-function getUnresolvedComplaints() {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("complaints/unresolved").then(function (response) {
-    return response.data;
-  });
-}
-function getAllDivisions() {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("divisions").then(function (response) {
-    return response.data;
-  });
-}
-function filterComplaints(dateFrom, dateTo, divisionId) {
-  return _globals__WEBPACK_IMPORTED_MODULE_0__["localApiInstance"].get("complaints/unresolved", {
-    params: {
-      date_from: dateFrom,
-      date_to: dateTo,
-      division_id: divisionId
+      public_key: publicKey
     }
   }).then(function (response) {
     return response.data;
