@@ -1,11 +1,12 @@
 <template>
     <v-container fluid>
+        <canvas class="background"/>
         <v-data-table
+            style="position: relative"
             :headers="headers"
             :items="metrics"
             :items-per-page="10"
-            class="elevation-1"
-        >
+            class="elevation-1">
             <template v-slot:body="{ items }">
                 <tbody>
                 <tr v-for="item in items" :key="item.id">
@@ -28,15 +29,42 @@
 <script>
     import {getPeerMetrics} from "../localApiService";
     import moment from "moment"
+    import Particles from "particlesjs"
 
     export default {
         name: "Metrics",
+        beforeDestroy() {
+            this.pjsInstance.destroy()
+        },
         created() {
             this.$vuetify.theme.dark = true;
             this.getPeerMetrics()
         },
+        mounted() {
+            this.pjsInstance = Particles.init
+            ({
+                selector: '.background',
+                color: '#75A5B7',
+                maxParticles: 130,
+                connectParticles: true,
+                responsive: [
+                    {
+                        breakpoint: 768,
+                        options: {
+                            maxParticles: 80
+                        }
+                    }, {
+                        breakpoint: 375,
+                        options: {
+                            maxParticles: 50
+                        }
+                    }
+                ]
+            });
+        },
         data() {
             return {
+                pjsInstance: null,
                 headers: [
                     {
                         text: 'Name',
@@ -70,5 +98,11 @@
 </script>
 
 <style scoped>
-
+    .background {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        z-index: 0;
+    }
 </style>

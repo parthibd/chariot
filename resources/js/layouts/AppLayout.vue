@@ -45,9 +45,7 @@
             <v-toolbar-title>Chariot</v-toolbar-title>
         </v-app-bar>
         <v-content>
-            <keep-alive>
-                <router-view/>
-            </keep-alive>
+            <router-view/>
         </v-content>
     </v-app>
 </template>

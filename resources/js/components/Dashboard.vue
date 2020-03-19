@@ -2,7 +2,8 @@
 
     <v-container
         fluid>
-        <v-row dense>
+        <canvas class="background"/>
+        <v-row dense style="position: relative">
             <v-col
                 v-for="client in clients"
                 :key="client.id"
@@ -92,6 +93,7 @@
 
 <script>
     import {addClient, deleteClient, editClient, getAllClients} from "../localApiService";
+    import Particles from "particlesjs"
 
     export default {
         props: {
@@ -113,11 +115,37 @@
             dialogAddUser: false,
             dialogEditUser: false,
             name: "",
-            currentEditedClient: null
+            currentEditedClient: null,
+            pjsInstance: null
         }),
+        beforeDestroy() {
+            this.pjsInstance.destroy()
+        },
         created() {
             this.$vuetify.theme.dark = true;
             this.getAllClients()
+        },
+        mounted() {
+            this.pjsInstance = Particles.init
+            ({
+                selector: '.background',
+                color: '#75A5B7',
+                maxParticles: 130,
+                connectParticles: true,
+                responsive: [
+                    {
+                        breakpoint: 768,
+                        options: {
+                            maxParticles: 80
+                        }
+                    }, {
+                        breakpoint: 375,
+                        options: {
+                            maxParticles: 50
+                        }
+                    }
+                ]
+            });
         },
         methods: {
             addClient() {
@@ -153,3 +181,13 @@
         }
     }
 </script>
+
+<style scoped>
+    .background {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        z-index: 0;
+    }
+</style>
