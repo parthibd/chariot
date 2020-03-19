@@ -80,3 +80,10 @@ export function editClient(id, name) {
         return response.data
     })
 }
+
+
+export function getPeerMetrics() {
+    return localApiInstance.get(`metric`).then(response => {
+        return response.data
+    })
+}

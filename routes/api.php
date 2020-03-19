@@ -20,5 +20,7 @@ Route::group(["middleware" => ["jwt.verify"]], function () {
         Route::get("/client", "ClientController@getAllClients");
         Route::put("/client", "ClientController@addClient");
         Route::delete("/client", "ClientController@removeClient");
+
+        Route::get("/metric", "MetricController@getPeerMetrics");
     });
 });

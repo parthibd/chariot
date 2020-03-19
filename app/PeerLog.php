@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Endroid\QrCode\QrCode;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -37,4 +38,10 @@ use Illuminate\Database\Eloquent\Model;
 class PeerLog extends Model
 {
     protected $guarded = [];
+    protected $appends = ["peer"];
+
+    public function getPeerAttribute()
+    {
+        return AvailableIp::where("public_key", $this->public_key)->first();
+    }
 }
