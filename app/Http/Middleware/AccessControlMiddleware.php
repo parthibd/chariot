@@ -21,6 +21,5 @@ class AccessControlMiddleware
             return $next($request);
         else
             return response()->json(["success" => false, "status" => "error", "message" => "Unauthorized action!"], 401);
-
     }
 }

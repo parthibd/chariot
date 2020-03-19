@@ -54,4 +54,9 @@ class WireGuardWrapper
     {
         return $this->executeCommand("sudo wg");
     }
+
+    public function showWireGuardDump()
+    {
+        return $this->executeCommand("sudo wg show wg0 dump");
+    }
 }
