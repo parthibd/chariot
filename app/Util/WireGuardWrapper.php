@@ -59,4 +59,9 @@ class WireGuardWrapper
     {
         return $this->executeCommand("sudo wg show wg0 dump");
     }
+
+    public function getWireguardTransferData()
+    {
+        return $this->executeCommand("sudo wg show wg0 transfer");
+    }
 }

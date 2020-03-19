@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\UserRoleIds;
 use Config;
 use Hash;
 use Illuminate\Http\Request;
@@ -28,6 +29,9 @@ class LoginController extends Controller
         if (!$user)
             return response()->json(["success" => false, "status" => "error", "message" => "No such user found!"]);
         else if (Hash::check($request->input("password"), $user->password)) {
+            if ($user->role->id != UserRoleIds::ADMIN) {
+                return response()->json(["success" => false, "status" => "error", "message" => "You are not authorized to perform this action."]);
+            }
             $builder = new Builder();
             $builder
                 ->setIssuedAt(time())
