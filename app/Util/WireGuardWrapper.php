@@ -13,11 +13,13 @@ class WireGuardWrapper
      * @var SSH2
      */
     private $ssh;
+    private $wireGuardInterface;
 
     private function __construct()
     {
         $this->ssh = new SSH2(config('wireguard.WIREGUARD_PUBLIC_IP'));
         $this->ssh->login(config('wireguard.WIREGUARD_USERNAME'), config('wireguard.WIREGUARD_PASSWORD'));
+        $this->wireGuardInterface = config('wireguard.WIREGUARD_INTERFACE');
     }
 
     public static function getInstance()
@@ -42,12 +44,12 @@ class WireGuardWrapper
 
     public function addClientToServer($publicKey, $ip)
     {
-        $this->executeCommand("sudo wg set wg0 peer $publicKey allowed-ips $ip");
+        $this->executeCommand("sudo wg set $this->wireGuardInterface peer $publicKey allowed-ips $ip");
     }
 
     public function removeClientFromServer($publicKey)
     {
-        $this->executeCommand("sudo wg set wg0 peer $publicKey remove");
+        $this->executeCommand("sudo wg set $this->wireGuardInterface peer $publicKey remove");
     }
 
     public function showWireGuardStatus()
