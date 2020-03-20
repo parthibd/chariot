@@ -121,7 +121,7 @@
         <v-dialog v-model="dialogClientConfigDownloadUrl" max-width="500px">
             <v-card>
                 <v-card-text class="pt-5">
-                    <v-text-field readonly v-model="configDownloadUrl" label="URL"/>
+                    <v-text-field readonly ref="textToCopy" v-model="configDownloadUrl" label="URL"/>
                     <small class="grey--text">Client Config Download Url</small>
                 </v-card-text>
                 <v-card-actions>
@@ -143,6 +143,12 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <v-snackbar
+            v-model="snackbar"
+            timeout=2000>
+            {{ snackbarText }}
+        </v-snackbar>
     </v-container>
 </template>
 
@@ -181,7 +187,10 @@
             currentEditedClient: null,
             pjsInstance: null,
             loadingData: true,
-            configDownloadUrl: ''
+            configDownloadUrl: '',
+            snackbar: false,
+            snackbarText: ''
+
         }),
         beforeDestroy() {
             this.pjsInstance.destroy()
@@ -254,9 +263,17 @@
                 })
             },
             getClientConfigDownloadUrl(client) {
+                const self = this;
                 this.dialogClientConfigDownloadUrl = true;
                 getClientConfigDownloadUrl(client.id).then(response => {
                     this.configDownloadUrl = response.url;
+                    this.$nextTick(() => {
+                        let textToCopy = self.$refs.textToCopy.$el.querySelector('input');
+                        textToCopy.select();
+                        document.execCommand("copy");
+                        self.snackbar = true;
+                        self.snackbarText = "Copied to clipboard!";
+                    })
                 })
             }
         }
