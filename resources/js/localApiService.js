@@ -93,3 +93,9 @@ export function getPeerMetrics() {
         return response.data
     })
 }
+
+export function getClientConfigDownloadUrl(id) {
+    return localApiInstance.get(`clientConfigDownloadUrl/${id}`).then(response => {
+        return response.data
+    })
+}

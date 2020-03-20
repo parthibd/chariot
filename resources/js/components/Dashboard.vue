@@ -25,10 +25,24 @@
                     <v-card-actions>
                         {{client.name}}
                         <v-spacer/>
+
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                                <v-btn @click="getClientConfigDownloadUrl(client)" icon>
+                                    <v-icon v-on="on">
+                                        mdi-share-variant
+                                    </v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Get Config Download Url</span>
+                        </v-tooltip>
+
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on }">
                                 <v-btn @click="toggleClientStatus(client)" icon>
-                                    <v-icon v-on="on" :color="client.is_active ?'green darken-2':'red darken-2'">mdi-check</v-icon>
+                                    <v-icon v-on="on" :color="client.is_active ?'green darken-2':'red darken-2'">
+                                        mdi-check
+                                    </v-icon>
                                 </v-btn>
                             </template>
                             <span>Toggle Client Status</span>
@@ -103,6 +117,20 @@
             </v-card>
         </v-dialog>
 
+
+        <v-dialog v-model="dialogClientConfigDownloadUrl" max-width="500px">
+            <v-card>
+                <v-card-text>
+                    <v-text-field readonly v-model="configDownloadUrl" label="URL"/>
+                    <small class="grey--text">Client Config Download Url</small>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer/>
+                    <v-btn text color="primary" @click="dialogClientConfigDownloadUrl=false">Ok</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
         <v-dialog v-model="dialogEditUser" max-width="500px">
             <v-card>
                 <v-card-text>
@@ -119,7 +147,14 @@
 </template>
 
 <script>
-    import {addClient, deleteClient, editClient, getAllClients, toggleClientStatus} from "../localApiService";
+    import {
+        addClient,
+        deleteClient,
+        editClient,
+        getAllClients,
+        getClientConfigDownloadUrl,
+        toggleClientStatus
+    } from "../localApiService";
     import Particles from "particlesjs"
 
     export default {
@@ -141,10 +176,12 @@
             clients: [],
             dialogAddUser: false,
             dialogEditUser: false,
+            dialogClientConfigDownloadUrl: false,
             name: "",
             currentEditedClient: null,
             pjsInstance: null,
-            loadingData: true
+            loadingData: true,
+            configDownloadUrl: ''
         }),
         beforeDestroy() {
             this.pjsInstance.destroy()
@@ -214,6 +251,12 @@
                 this.loadingData = true;
                 toggleClientStatus(client.id).then(response => {
                     this.getAllClients();
+                })
+            },
+            getClientConfigDownloadUrl(client) {
+                this.dialogClientConfigDownloadUrl = true;
+                getClientConfigDownloadUrl(client.id).then(response => {
+                    this.configDownloadUrl = response.url;
                 })
             }
         }

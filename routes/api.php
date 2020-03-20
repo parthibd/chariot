@@ -16,6 +16,7 @@ Route::post("/login", "LoginController@login");
 
 Route::group(["middleware" => ["jwt.verify"]], function () {
     Route::group(["middleware" => ["access.control:admin"]], function () {
+        Route::get("/clientConfigDownloadUrl/{id}", "ClientController@getClientConfigDownloadUrl");
         Route::patch("/client/status/{id}", "ClientController@toggleClientStatus");
         Route::patch("/client/{id}", "ClientController@editClient");
         Route::get("/client", "ClientController@getAllClients");
@@ -25,3 +26,7 @@ Route::group(["middleware" => ["jwt.verify"]], function () {
         Route::get("/metric", "MetricController@getPeerMetrics");
     });
 });
+
+Route::get("/client/{id}/config", [
+    'as' => 'downloadUserConfig',
+    'uses' => "ClientController@downloadConfigFile"]);

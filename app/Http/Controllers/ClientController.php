@@ -7,6 +7,9 @@ use App\Util\WireGuardWrapper;
 use Composer\Config;
 use Endroid\QrCode\QrCode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
+use SplFileInfo;
+use Storage;
 use Validator;
 
 class ClientController extends Controller
@@ -122,6 +125,32 @@ EOD;
                 $ip->save();
             }
             return response()->json(["success" => true, "status" => "ok", "message" => "Client status toggled!"]);
+        } else {
+            return response()->json(["success" => false, "status" => "error", "message" => "No such peer exists."]);
+        }
+    }
+
+    public function getClientConfigDownloadUrl($id)
+    {
+        return response()->json([
+            'url' => URL::temporarySignedRoute(
+                'downloadUserConfig', now()->addMinutes(30), ['id' => $id]
+            )
+        ]);
+    }
+
+    public function downloadConfigFile(Request $request, $id)
+    {
+        if (!$request->hasValidSignature()) {
+            return response("Unauthorized", 401);
+        }
+        $ip = AvailableIp::where('id', $id)->first();
+        if ($ip) {
+            $headers = array(
+                'Content-Type: text/plain',
+            );
+            Storage::disk('local')->put('config.conf', $ip->config);
+            return response()->download(Storage::disk('local')->path('config.conf'), 'config.conf', $headers)->deleteFileAfterSend(true);
         } else {
             return response()->json(["success" => false, "status" => "error", "message" => "No such peer exists."]);
         }
