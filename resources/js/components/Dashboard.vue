@@ -106,7 +106,7 @@
 
         <v-dialog v-model="dialogAddUser" max-width="500px">
             <v-card>
-                <v-card-text>
+                <v-card-text class="pt-5">
                     <v-text-field v-model="name" label="Name"/>
                     <small class="grey--text">Enter friendly name for the client.</small>
                 </v-card-text>
@@ -120,7 +120,7 @@
 
         <v-dialog v-model="dialogClientConfigDownloadUrl" max-width="500px">
             <v-card>
-                <v-card-text>
+                <v-card-text class="pt-5">
                     <v-text-field readonly v-model="configDownloadUrl" label="URL"/>
                     <small class="grey--text">Client Config Download Url</small>
                 </v-card-text>
@@ -133,7 +133,7 @@
 
         <v-dialog v-model="dialogEditUser" max-width="500px">
             <v-card>
-                <v-card-text>
+                <v-card-text class="pt-5">
                     <v-text-field v-model="name" label="Name"/>
                     <small class="grey--text">Enter friendly name for the client.</small>
                 </v-card-text>
