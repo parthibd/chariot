@@ -12,5 +12,16 @@ const mix = require('laravel-mix');
  */
 let productionSourceMaps = false;
 
-mix.js('resources/js/app.js', 'public/js').sourceMaps(productionSourceMaps, 'source-map')
+mix.js('resources/js/app.js', 'public/js').extract([
+    "vue",
+    "vuetify",
+    "axios",
+    "bootstrap",
+    "lodash",
+    "jwt-decode",
+    "vue-router",
+    "vuex",
+    "moment",
+    "particlesjs",
+    "jquery"]).sourceMaps(productionSourceMaps, 'source-map')
     .sass('resources/sass/app.scss', 'public/css');
