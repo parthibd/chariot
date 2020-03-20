@@ -81,6 +81,12 @@ export function editClient(id, name) {
     })
 }
 
+export function toggleClientStatus(id) {
+    return localApiInstance.patch(`client/status/${id}`).then(response => {
+        return response.data
+    })
+}
+
 
 export function getPeerMetrics() {
     return localApiInstance.get(`metric`).then(response => {

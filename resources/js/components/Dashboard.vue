@@ -25,13 +25,35 @@
                     <v-card-actions>
                         {{client.name}}
                         <v-spacer/>
-                        <v-btn
-                            @click="openEditClientDialog(client)" icon>
-                            <v-icon>mdi-pencil</v-icon>
-                        </v-btn>
-                        <v-btn @click="deleteClient(client.public_key)" icon>
-                            <v-icon>mdi-delete</v-icon>
-                        </v-btn>
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                                <v-btn @click="toggleClientStatus(client)" icon>
+                                    <v-icon v-on="on" :color="client.is_active ?'green darken-2':'red darken-2'">mdi-check</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Toggle Client Status</span>
+                        </v-tooltip>
+
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                                <v-btn
+                                    v-on="on"
+                                    @click="openEditClientDialog(client)" icon>
+                                    <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Edit Client Name</span>
+                        </v-tooltip>
+
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                                <v-btn v-on="on" @click="deleteClient(client.public_key)" icon>
+                                    <v-icon>mdi-delete</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Delete Client</span>
+                        </v-tooltip>
+
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -97,7 +119,7 @@
 </template>
 
 <script>
-    import {addClient, deleteClient, editClient, getAllClients} from "../localApiService";
+    import {addClient, deleteClient, editClient, getAllClients, toggleClientStatus} from "../localApiService";
     import Particles from "particlesjs"
 
     export default {
@@ -156,6 +178,7 @@
         methods: {
             addClient() {
                 this.dialogAddUser = false;
+                this.loadingData = true;
                 addClient(this.name).then(() => {
                     this.name = '';
                     this.getAllClients();
@@ -184,6 +207,12 @@
                 editClient(this.currentEditedClient.id, this.name).then(response => {
                     this.currentEditedClient = null;
                     this.name = '';
+                    this.getAllClients();
+                })
+            },
+            toggleClientStatus(client) {
+                this.loadingData = true;
+                toggleClientStatus(client.id).then(response => {
                     this.getAllClients();
                 })
             }

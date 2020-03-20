@@ -21,6 +21,7 @@ class CreateAvailableIpsTable extends Migration
             $table->string("public_key")->nullable();
             $table->boolean("is_assigned")->nullable();
             $table->string("name")->nullable();
+            $table->boolean("is_active")->nullable();
             $table->longText("config")->nullable();
         });
     }

@@ -25,7 +25,8 @@ class AvailableIpsTableSeeder extends Seeder
         for ($i = 1; $i < $maxPossibleHostCount; $i++) {
             $arr[] = [
                 "ip" => long2ip((ip2long($cidr[0]) & ip2long($networkMask)) | ip2long(long2ip($i))),
-                "is_assigned" => false];
+                "is_assigned" => false,
+                "is_active" => false];
         }
         $serverIp = explode("/", config('wireguard.WIREGUARD_INTERFACE_IP'))[0];
         $index = array_search($serverIp, $arr);

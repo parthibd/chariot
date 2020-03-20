@@ -48,6 +48,7 @@ EOD;
         $ip->public_key = $keyPair[0];
         $ip->endpoint = $ipToAssign;
         $ip->is_assigned = true;
+        $ip->is_active = true;
         $ip->config = $config;
         $ip->name = $request->input("name");
         $ip->save();
@@ -72,6 +73,7 @@ EOD;
             $ip->public_key = null;
             $ip->endpoint = null;
             $ip->is_assigned = false;
+            $ip->is_active = false;
             $ip->config = null;
             $ip->name = null;
             $ip->save();
@@ -104,5 +106,24 @@ EOD;
     public function getAllClients()
     {
         return response()->json(AvailableIp::where("is_assigned", true)->get());
+    }
+
+    public function toggleClientStatus($id)
+    {
+        $ip = AvailableIp::where('id', $id)->first();
+        if ($ip) {
+            if ($ip->is_active) {
+                WireGuardWrapper::getInstance()->removeClientFromServer($ip->public_key);
+                $ip->is_active = false;
+                $ip->save();
+            } else {
+                WireGuardWrapper::getInstance()->addClientToServer($ip->public_key, $ip->endpoint);
+                $ip->is_active = true;
+                $ip->save();
+            }
+            return response()->json(["success" => true, "status" => "ok", "message" => "Client status toggled!"]);
+        } else {
+            return response()->json(["success" => false, "status" => "error", "message" => "No such peer exists."]);
+        }
     }
 }
