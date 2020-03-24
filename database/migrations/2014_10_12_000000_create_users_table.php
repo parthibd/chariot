@@ -18,7 +18,8 @@ class CreateUsersTable extends Migration
             $table->string('username');
             $table->string('password');
             $table->smallInteger("user_role_id");
-            $table->string('wg_interface_ip')->nullable();
+            $table->string('quota_id')->nullable();
+            $table->string('available_ip_id')->nullable();
             $table->timestamps();
         });
     }
